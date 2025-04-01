@@ -128,12 +128,15 @@ tests/results/*
 !tests/results/.gitkeep
 
 # models
-models/*
-models/*.pt
-models/*.pth
-models/*.h5
-models/*.onnx
-models/*.trt
+resources/models/*
+resources/models/*.pt
+resources/models/*.pth
+resources/models/*.h5
+resources/models/*.onnx
+resources/models/*.trt
+
+# Output
+*.mp4
 
 # experiments
 experiments/results/*
