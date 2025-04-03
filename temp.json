@@ -1,0 +1,69 @@
+{'pages': [
+        {'page_idx': 0, 'dimensions': (738,
+            1080), 'orientation': {'value': None, 'confidence': None
+            }, 'language': {'value': None, 'confidence': None
+            }, 'blocks': [
+                {'geometry': ((0.0),(0.18702362804878048)), (0.970703125),(1.0))), 'objectness_score': 0.366161598609044, 'lines': [
+                        {'geometry': ((0.0),(0.18702362804878048)), (0.185546875),(0.24847560975609756))), 'objectness_score': 0.37860313057899475, 'words': [
+                                {'value': 'CTRA', 'confidence': 0.9997460842132568, 'geometry': ((0.0),(0.19131097560975607)), (0.111328125),(0.24847560975609756))), 'objectness_score': 0.35736703872680664, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': 'CD', 'confidence': 0.999327540397644, 'geometry': ((0.12109375),(0.18702362804878048)), (0.185546875),(0.23704268292682928))), 'objectness_score': 0.39983922243118286, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                }
+                            ]
+                        },
+                        {'geometry': ((0.921875),(0.20988948170731708)), (0.970703125),(0.23990091463414637))), 'objectness_score': 0.318386971950531, 'words': [
+                                {'value': 'a', 'confidence': 0.7317976951599121, 'geometry': ((0.921875),(0.20988948170731708)), (0.9462890625),(0.2341844512195122))), 'objectness_score': 0.31584835052490234, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': 'a', 'confidence': 0.29283103346824646, 'geometry': ((0.9462890625),(0.21417682926829268)), (0.970703125),(0.23990091463414637))), 'objectness_score': 0.32092559337615967, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                }
+                            ]
+                        },
+                        {'geometry': ((0.400390625),(0.4428353658536585)), (0.611328125),(0.4842797256097561))), 'objectness_score': 0.4659369885921478, 'words': [
+                                {'value': 'RJ-VOLTA', 'confidence': 0.9992892742156982, 'geometry': ((0.400390625),(0.4428353658536585)), (0.5048828125),(0.4842797256097561))), 'objectness_score': 0.45954519510269165, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': 'REDONDA', 'confidence': 0.9947209358215332, 'geometry': ((0.513671875),(0.4442644817073171)), (0.611328125),(0.48142149390243905))), 'objectness_score': 0.472328782081604, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                }
+                            ]
+                        },
+                        {'geometry': ((0.263671875),(0.4757050304878049)), (0.724609375),(0.6314786585365854))), 'objectness_score': 0.473599374294281, 'words': [
+                                {'value': 'LBM-4000', 'confidence': 0.9959099888801575, 'geometry': ((0.263671875),(0.4757050304878049)), (0.724609375),(0.6314786585365854))), 'objectness_score': 0.473599374294281, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                }
+                            ]
+                        },
+                        {'geometry': ((0.060546875),(0.8958650914634146)), (0.0986328125),(0.950171493902439))), 'objectness_score': 0.3233851194381714, 'words': [
+                                {'value': 'o', 'confidence': 0.4630473852157593, 'geometry': ((0.060546875),(0.8958650914634146)), (0.0986328125),(0.950171493902439))), 'objectness_score': 0.3233851194381714, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                }
+                            ]
+                        },
+                        {'geometry': ((0.0244140625),(0.9787538109756098)), (0.2119140625),(1.0))), 'objectness_score': 0.3274524211883545, 'words': [
+                                {'value': '-', 'confidence': 0.7006763219833374, 'geometry': ((0.0244140625),(0.987328506097561)), (0.0322265625),(0.9959032012195121))), 'objectness_score': 0.31459787487983704, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': 'a', 'confidence': 0.5934011936187744, 'geometry': ((0.0400390625),(0.9816120426829269)), (0.060546875),(0.9987614329268293))), 'objectness_score': 0.3159092962741852, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': 'a', 'confidence': 0.9389380812644958, 'geometry': ((0.0634765625),(0.9844702743902439)), (0.0791015625),(1.0))), 'objectness_score': 0.30284175276756287, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': 'Brelita', 'confidence': 0.8375579118728638, 'geometry': ((0.0849609375),(0.9787538109756098)), (0.1591796875),(1.0))), 'objectness_score': 0.31509023904800415, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                },
+                                {'value': '2001', 'confidence': 0.9701889157295227, 'geometry': ((0.1630859375),(0.9830411585365854)), (0.2119140625),(1.0))), 'objectness_score': 0.3888229429721832, 'crop_orientation': {'value': 0, 'confidence': None
+                                    }
+                                }
+                            ]
+                        }
+                    ], 'artefacts': []
+                }
+            ]
+        }
+    ]
+}

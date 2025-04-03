@@ -1,0 +1,1 @@
+from .doctr_ocr import DocTROcr

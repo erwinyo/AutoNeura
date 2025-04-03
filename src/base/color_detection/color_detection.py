@@ -38,8 +38,14 @@ class ColorDetection:
 
         self._iscc_color = self._color_system[["color"]].values
         self._iscc_category = self._color_system[["category"]].values
+
         self._iscc_rgb = self._color_system[['r', 'g', 'b']].to_numpy() / 255
         self._iscc_lab = color.rgb2lab(self._iscc_rgb)
+
+        logger.debug(f"Shape of _iscc_color: {self._iscc_color.shape}")
+        logger.debug(f"Shape of _iscc_category: {self._iscc_category.shape}")
+        logger.debug(f"Shape of _iscc_rgb: {self._iscc_rgb.shape}")
+        logger.debug(f"Shape of _iscc_lab: {self._iscc_lab.shape}")
 
     def preprocess(self, data):
         logger.info("Preprocessing data for ColorDetection class.")
@@ -73,16 +79,29 @@ class ColorDetection:
         t = []
         for i in range(len(self._iscc_lab)):
             if metric == "euclidean":
-                distances = calculate_euclidean_distance(self._iscc_lab[i], lab)
+                distances = calculate_euclidean_distance(
+                    array1=self._iscc_lab[i], 
+                    array2=lab
+                )
                 logger.debug(f"Euclidean distance: {distances}")
             elif metric == "manhattan":
-                distances = calculate_manhattan_distance(self._iscc_lab[i], lab)
+                distances = calculate_manhattan_distance(
+                    vector1=self._iscc_lab[i], 
+                    vector2=lab
+                )
                 logger.debug("Manhattan distance: {distances}")
             elif metric == "chebyshev":
-                distances = calculate_chebyshev_distance(self._iscc_lab[i], lab)
+                distances = calculate_chebyshev_distance(
+                    vector1=self._iscc_lab[i], 
+                    vector2=lab
+                )
                 logger.debug("Chebyshev distance: {distances}")
             elif metric == "minkowski":
-                distances = calculate_minkowski_distance(self._iscc_lab[i], lab, 3)
+                distances = calculate_minkowski_distance(
+                    vector1=self._iscc_lab[i], 
+                    vector2=lab, 
+                    power_parameter=3
+                )
                 logger.debug("Minkowski distance: {distances}")
             t.append(distances)
         

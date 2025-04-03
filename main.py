@@ -9,14 +9,16 @@ from dotenv import load_dotenv
 
 from base.yolo_vehicle_detection import YOLOVehicleDetection
 from base.color_detection import ColorDetection
+from base.doctr_ocr import DocTROcr
 from base.config import (
     logger,
     yolo_vehicle_detection_user_config,
-    color_detection_user_config
+    color_detection_user_config,
+    doctr_ocr_user_config
 )
 load_dotenv()
 
-if __name__ == "__main__":
+def main():
     logger.info("Starting the AutoNeura...")
 
     # Initialize color detection
@@ -84,24 +86,24 @@ if __name__ == "__main__":
         dominant_hue_colors = []
         dominant_hue_categories = []
 
-        logger.info("[loop detections.xyxy] Processing each detection with for loop.")
+        logger.info("Processing each detection with for loop.")
         for x1, y1, x2, y2 in detections.xyxy:
-            logger.debug(f"[loop detections.xyxy] Detection coordinates: {x1}, {y1}, {x2}, {y2}")
+            logger.debug(f"Detection coordinates: {x1}, {y1}, {x2}, {y2}")
             
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-            logger.debug(f"[loop detections.xyxy] Converted coordinates: {x1}, {y1}, {x2}, {y2}")
+            logger.debug(f"Converted coordinates: {x1}, {y1}, {x2}, {y2}")
             mid_x, mid_y = int(x1 + ((x2 - x1) / 2)), int(y1 + ((y2 - y1) / 2))
-            logger.debug(f"[loop detections.xyxy] Midpoint coordinates: {mid_x}, {mid_y}") 
+            logger.debug(f"Midpoint coordinates: {mid_x}, {mid_y}") 
 
             cropped_frame = frame[y1:y2, x1:x2]
-            logger.debug(f"[loop detections.xyxy] Cropped frame shape: {cropped_frame.shape}")
+            logger.debug(f"Cropped frame shape: {cropped_frame.shape}")
 
             cropped_frame = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2RGB)
-            logger.debug(f"[loop detections.xyxy] Resized cropped frame shape: {cropped_frame.shape}")
+            logger.debug(f"Resized cropped frame shape: {cropped_frame.shape}")
 
             dominant_hue_color, dominant_hue_category = color_detection.process(cropped_frame)
-            logger.debug(f"[loop detections.xyxy] Dominant hue color: {dominant_hue_color}")
-            logger.debug(f"[loop detections.xyxy] Dominant hue category: {dominant_hue_category}")
+            logger.debug(f"Dominant hue color: {dominant_hue_color}")
+            logger.debug(f"Dominant hue category: {dominant_hue_category}")
 
             dominant_hue_colors.append(dominant_hue_color)
             dominant_hue_categories.append(dominant_hue_category)
@@ -141,6 +143,29 @@ if __name__ == "__main__":
     progress_bar.close()
     cap.release()
     out.release()
+
+
+def main_license_plate():
+    logger.info("Starting the AutoNeura...")
+
+    # Initialize DocTROcr
+    logger.info("Initializing DocTROcr with user configuration.")
+    doctr_ocr = DocTROcr(
+        config=doctr_ocr_user_config
+    )
+
+    # Load image
+    logger.info("Loading image.")
+    image = cv2.imread("/home/erwin/Images/brazil-plate2.jpg")
+    logger.debug(f"Image shape: {image.shape}")
+
+    # Detect license plate
+    logger.info("Detecting license plate.")
+    results = doctr_ocr.process(image)
+    logger.debug(f"Results: {results}")
+
+if __name__ == "__main__":
+    main_license_plate()
         
 
 
