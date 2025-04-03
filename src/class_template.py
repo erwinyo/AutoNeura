@@ -12,7 +12,9 @@ import torchvision.transforms as T
 from transformers import AutoFeatureExtractor, AutoModel
 
 # Local package
-
+from base.config import (
+    logger
+)
 
 load_dotenv()
 
@@ -22,16 +24,19 @@ class VITImageEmbedding:
 
     _model: AutoFeatureExtractor = field(init=False, repr=False)
     def __post_init__(self) -> None:
+       logger.info("Initializing _______________ class.")
        pass
 
     def preprocess(self, data):
+        logger.info("Preprocessing data for _______________ class.")
         return data
 
     def postprocess(self, data):
+        logger.info("Postprocessing data for _______________ class.")
         return data
 
     def process(self, image, raw_result: bool = False):
-    
+        logger.info("Processing data _______________ class.")
         
         if raw_result:
             return embedding

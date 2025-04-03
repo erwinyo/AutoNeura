@@ -13,7 +13,9 @@ import torchvision.transforms as T
 from transformers import AutoFeatureExtractor, AutoModel
 
 # Local package
-
+from base.config import (
+    logger
+)
 
 load_dotenv()
 
@@ -23,16 +25,22 @@ class VehicleAttribute:
 
     _model: PaddleClas = field(init=False, repr=False)
     def __post_init__(self) -> None:
+       logger.info("Initializing VehicleAttribute class.")
        self._model = PaddleClas(model_name="vehicle_attribute")
 
     def preprocess(self, data):
+        logger.info("Preprocessing data for VehicleAttribute class.")
         return data
 
     def postprocess(self, attributes):
+        logger.info("Postprocessing data for VehicleAttribute class.")
         return attributes
 
     def process(self, image, raw_result: bool = False):
+        logger.info("Processing data VehicleAttribute class.")
+
         # Get the attribute of vehicle
+        logger.info("Getting the attribute of vehicle.")
         attributes = self._model.predict(
             image,
             predict_type="cls"

@@ -14,6 +14,8 @@ dependencies = [
     "python-box (>=7.3.2,<8.0.0)",
     "tqdm (>=4.67.1,<5.0.0)",
     "scikit-image (>=0.25.2,<0.26.0)",
+    "openpyxl (>=3.1.5,<4.0.0)",
+    "loguru (>=0.7.3,<0.8.0)",
 ]
 
 [build-system]
