@@ -61,6 +61,7 @@ class DocTROcr:
         for i in range(len(xyxys_bowl)):
             xyxys_bowl[i] = [xyxys_bowl[i][0] * width, xyxys_bowl[i][1] * height, xyxys_bowl[i][2] * width, xyxys_bowl[i][3] * height]
         
+        # Return the result as a dictionary
         return_value = Box({
             "words": words_bowl,
             "confidences": confidences_bowl,

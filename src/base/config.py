@@ -23,13 +23,36 @@ logger.add(
     level=LEVEL
 )
 
+
+# Yolo Vehicle Detection configuration
+yolo_license_plate_user_config = Box({
+
+})
+
+yolo_license_plate_model_config = Box({
+    "model": "resources/models/yolo/license_plate/yolo12m.pt",
+    "task": "detect"
+})
+
+yolo_license_plate_inference_config = Box({
+    "conf": 0.4,
+    "iou": 0.7,
+    "half": False,
+    "device": "cuda:0",
+    "agnostic_nms": False,
+    "classes": [0],
+    "stream": False,
+    "verbose": False
+})
+
+
 # Yolo Vehicle Detection configuration
 yolo_vehicle_detection_user_config = Box({
 
 })
 
 yolo_vehicle_detection_model_config = Box({
-    "model": "resources/models/yolo/yolo12m.pt",
+    "model": "resources/models/yolo/original/yolo12m.pt",
     "task": "detect"
 })
 
@@ -47,7 +70,7 @@ yolo_vehicle_detection_inference_config = Box({
 
 # Color Detection configuration
 color_detection_user_config = Box({
-    "iscc_nbs_colour_system_path": "/home/erwin/Documents/AutoNeura/resources/files/iscc-nbs-colour-system.xlsx"
+    "iscc_nbs_colour_system_path": "resources/files/iscc-nbs-colour-system.xlsx"
 })
 
 # Doctr OCR configuration

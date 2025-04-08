@@ -13,31 +13,31 @@ from base.config import (
     logger
 )
 from base.config import (
-    yolo_vehicle_detection_model_config,
-    yolo_vehicle_detection_inference_config
+    yolo_license_plate_model_config,
+    yolo_license_plate_inference_config
 )
 
 load_dotenv()
 
 @dataclass(frozen=False, kw_only=False, match_args=False, slots=False)
-class YOLOVehicleDetection:
+class YOLOLicensePlateDetection:
     config: dict = field(default_factory=dict)
 
     _model: YOLO = field(init=False, repr=False)
     def __post_init__(self) -> None:
-        logger.info("Initializing YOLOVehicleDetection class.")
-        self._model = YOLO(**yolo_vehicle_detection_model_config)
+        logger.info("Initializing YOLOLicensePlateDetection class.")
+        self._model = YOLO(**yolo_license_plate_model_config)
 
     def preprocess(self, data):
-        logger.info("Preprocessing data for YOLOVehicleDetection class.")
+        logger.info("Preprocessing data for YOLOLicensePlateDetection class.")
         return data
     
     def postprocess(self, data):
-        logger.info("Postprocessing data for YOLOVehicleDetection class.")
+        logger.info("Postprocessing data for YOLOLicensePlateDetection class.")
         return data
 
     def process(self, data, raw_result: bool = False, save_result: bool = False):
-        logger.info("Processing data YOLOVehicleDetection class.")
+        logger.info("Processing data YOLOLicensePlateDetection class.")
         
         if save_result:
             if not os.path.exists(data):
@@ -46,12 +46,12 @@ class YOLOVehicleDetection:
             
             # Save result to file
             logger.info("Saving result to file.")
-            self._model(data, save=True, **yolo_vehicle_detection_inference_config)
+            self._model(data, save=True, **yolo_license_plate_inference_config)
             return
 
         else:
             with torch.no_grad():
-                results = self._model.predict(data, **yolo_vehicle_detection_inference_config)[0]
+                results = self._model.predict(data, **yolo_license_plate_inference_config)[0]
 
             # Compile result to supervision
             detections = sv.Detections.from_ultralytics(results)

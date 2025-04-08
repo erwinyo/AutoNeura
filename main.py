@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 sys.path.insert(1, os.path.abspath(os.path.join(os.path.dirname(__file__), './src')))
 
 import cv2
@@ -18,7 +19,7 @@ from base.config import (
 )
 load_dotenv()
 
-def main():
+def main_all(SOURCE_FILEPATH):
     logger.info("Starting the AutoNeura...")
 
     # Initialize color detection
@@ -49,7 +50,7 @@ def main():
 
     # Load video
     logger.info("Initializing OpenCV VideoCapture.")
-    cap = cv2.VideoCapture("/home/erwin/Videos/cars/sample#7.mp4")
+    cap = cv2.VideoCapture(SOURCE_FILEPATH)
     # Initialize video writer
     logger.info("Initializing OpenCV VideoWriter.")
     output_path = "output.mp4"
@@ -80,7 +81,7 @@ def main():
         logger.info("Performing vehicle detection.")
         detections = yolo_vehicle_detection.process(frame)
         logger.debug(f"Detections atttributes: {dir(detections)}")
-        logger.debug(f"Detections xyxy: {detections.xyxy}")  
+        logger.trace(f"Detections xyxy: {detections.xyxy}")  
 
         logger.info("Performing color detection.")
         dominant_hue_colors = []
@@ -109,7 +110,7 @@ def main():
             dominant_hue_categories.append(dominant_hue_category)
         
         else:
-            logger.info("[loop detections.xyxy] For loop done. No detections found in the frame.")
+            logger.info("For loop done. No detections found in the frame.")
         
         logger.debug(f"Dominant hue colors: {len(dominant_hue_colors)}")
         logger.debug(f"Dominant hue categories: {len(dominant_hue_categories)}")
@@ -145,8 +146,27 @@ def main():
     out.release()
 
 
-def main_license_plate():
-    logger.info("Starting the AutoNeura...")
+def main_color_detection(SOURCE_FILEPATH):
+    pass
+
+
+def main_speed_recognition(SOURCE_FILEPATH):
+    pass
+
+
+
+def main_vehicle_detection(SOURCE_FILEPATH):
+    logger.info("Starting vehicle detection the AutoNeura...")
+
+    # Initialize YOLO vehicle detection
+    logger.info("Initializing YOLOVehicleDetection with user configuration.")
+    yolo_vehicle_detection = YOLOVehicleDetection(
+        config=yolo_vehicle_detection_user_config
+    )
+    yolo_vehicle_detection.process(SOURCE_FILEPATH, save_result=True)
+
+def main_license_plate(SOURCE_FILEPATH):
+    logger.info("Starting license plate the AutoNeura...")
 
     # Initialize DocTROcr
     logger.info("Initializing DocTROcr with user configuration.")
@@ -156,7 +176,7 @@ def main_license_plate():
 
     # Load image
     logger.info("Loading image.")
-    image = cv2.imread("/home/erwin/Images/brazil-plate2.jpg")
+    image = cv2.imread(SOURCE_FILEPATH)
     logger.debug(f"Image shape: {image.shape}")
 
     # Detect license plate
@@ -164,8 +184,42 @@ def main_license_plate():
     results = doctr_ocr.process(image)
     logger.debug(f"Results: {results}")
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="AutoNeura CLI")
+    parser.add_argument(
+        "--type",
+        type=str,
+        help="select the type of detection to perform",
+        choices=["color_detection", "vehicle_detection", "license_plate", "speed_recognition"],
+        required=True
+    )
+    parser.add_argument(
+        "--source",
+        type=str,
+        help="Path to the source (video/image file)",
+        required=False
+    )
+    return parser.parse_args()
+
 if __name__ == "__main__":
-    main_license_plate()
-        
+    args = parse_arguments()
+    logger.debug(f"Arguments entered by user: {args}")
+    if args.source:
+        logger.debug(f"Source file: {args.source}")
+    else:
+        logger.error("No source file provided.")
+        raise ValueError("No source file provided.")
+    
+    if args.type == "color_detection":
+        main_color_detection(args.source)
+    elif args.type == "vehicle_detection":
+        main_vehicle_detection(args.source)
+    elif args.type == "license_plate":
+        main_license_plate(args.source)
+    else:
+        logger.error("Invalid type selected. Please choose from 'color_detection', 'vehicle_detection', or 'license_plate'.")
+        raise ValueError("Invalid type selected. Please choose from 'color_detection', 'vehicle_detection', or 'license_plate'.")
+
+
 
 

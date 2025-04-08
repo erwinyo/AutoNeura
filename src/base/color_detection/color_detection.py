@@ -35,6 +35,7 @@ class ColorDetection:
         self._color_system = pd.read_excel(
             self.config.iscc_nbs_colour_system_path
         ).dropna(subset=['r', 'g', 'b']).reset_index(drop=True)
+        logger.trace(f"Raw color system data from file: {self._color_system.head()}")
 
         self._iscc_color = self._color_system[["color"]].values
         self._iscc_category = self._color_system[["category"]].values
@@ -125,3 +126,4 @@ class ColorDetection:
             dominant_hue_category
         )
         return dominant_hue_color, dominant_hue_category
+

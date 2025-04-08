@@ -135,6 +135,38 @@ resources/models/*.h5
 resources/models/*.onnx
 resources/models/*.trt
 
+# datatsets
+resources/datasets/*
+resources/datasets/*.zip
+resources/datasets/*.tar
+resources/datasets/*.tar.gz
+resources/datasets/*.tar.xz
+resources/datasets/*.tar.bz2
+resources/datasets/*.tar.lz
+resources/datasets/*.tar.lzma
+resources/datasets/*.tar.zst
+resources/datasets/*.tar.lz4
+resources/datasets/*.tar.sz
+resources/datasets/*.tar.sz4    
+
+# runs
+runs/*
+runs/train/*
+runs/val/*
+runs/test/*
+runs/segment/*
+runs/track/*
+runs/segment/train/*
+runs/segment/val/*
+runs/segment/test/*
+runs/segment/track/*
+runs/segment/track/train/*
+runs/segment/track/val/*
+runs/segment/track/test/*
+runs/segment/track/track/*
+
+
+
 # Output
 *.mp4
 
