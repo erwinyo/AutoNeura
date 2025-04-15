@@ -14,7 +14,9 @@ from transformers import AutoFeatureExtractor, AutoModel
 
 # Local package
 from base.config import (
-    logger
+    logger,
+    vehicle_attribute_model_config,
+    vehicle_attribute_inference_config
 )
 
 load_dotenv()
@@ -26,7 +28,7 @@ class VehicleAttribute:
     _model: PaddleClas = field(init=False, repr=False)
     def __post_init__(self) -> None:
        logger.info("Initializing VehicleAttribute class.")
-       self._model = PaddleClas(model_name="vehicle_attribute")
+       self._model = PaddleClas(**vehicle_attribute_model_config)
 
     def preprocess(self, data):
         logger.info("Preprocessing data for VehicleAttribute class.")
@@ -43,7 +45,7 @@ class VehicleAttribute:
         logger.info("Getting the attribute of vehicle.")
         attributes = self._model.predict(
             image,
-            predict_type="cls"
+            **vehicle_attribute_inference_config
         )
         
         if raw_result:

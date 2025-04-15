@@ -10,9 +10,7 @@ from dotenv import load_dotenv
 
 # Local package
 from base.config import (
-    logger
-)
-from base.config import (
+    logger,
     yolo_vehicle_detection_model_config,
     yolo_vehicle_detection_inference_config
 )

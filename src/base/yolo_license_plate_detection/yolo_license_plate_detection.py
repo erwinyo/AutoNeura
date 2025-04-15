@@ -10,9 +10,7 @@ from dotenv import load_dotenv
 
 # Local package
 from base.config import (
-    logger
-)
-from base.config import (
+    logger,
     yolo_license_plate_model_config,
     yolo_license_plate_inference_config
 )

@@ -147,7 +147,9 @@ def main_all(SOURCE_FILEPATH):
 
 
 def main_color_detection(SOURCE_FILEPATH):
-    pass
+    color_detection = ColorDetection(
+        config=color_detection_user_config
+    )
 
 
 def main_speed_recognition(SOURCE_FILEPATH):
