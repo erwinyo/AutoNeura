@@ -7,7 +7,9 @@ from loguru import logger
 
 # Logger configuration
 LEVEL = "TRACE"
-# LEVEL = "DEBUG"
+PRINT_TO_CONSOLE = True
+
+# ------------------------------- [LOGGER] -------------------------------
 
 logger.remove() # Remove default logger configuration
 # Add new logger configuration to write to a file
@@ -16,13 +18,27 @@ logger.add(
     format="<yellow>[{time:YYYY-MM-DD HH:mm:ss:SSSS}]</yellow> [<level><b>{level}</b></level>] [<b>{file.path}:{line}</b>] [<b>{function}</b>] <level>{message}</level>",
     level=LEVEL
 )
-# Add new logger configuration to print to console
-logger.add(
-    sys.stdout,
-    format="<yellow>[{time:YYYY-MM-DD HH:mm:ss:SSSS}]</yellow> [<level><b>{level}</b></level>] [<b>{file.path}:{line}</b>] [<b>{function}</b>] <level>{message}</level>",
-    level=LEVEL
-)
 
+if PRINT_TO_CONSOLE:
+    # Add new logger configuration to print to console
+    logger.add(
+        sys.stdout,
+        format="<yellow>[{time:YYYY-MM-DD HH:mm:ss:SSSS}]</yellow> [<level><b>{level}</b></level>] [<b>{file.path}:{line}</b>] [<b>{function}</b>] <level>{message}</level>",
+        level=LEVEL
+    )
+
+# ------------------------------- [APP] -------------------------------
+license_plate_recognition_user_config = Box({  
+    
+})
+text_recognition_user_config = Box({  
+    
+})
+
+
+
+
+# ------------------------------- [BASE] -------------------------------
 # Yolo Vehicle Detection configuration
 yolo_vehicle_detection_user_config = Box({
 
@@ -43,14 +59,14 @@ yolo_vehicle_detection_inference_config = Box({
 })
 
 # Yolo License Plate configuration
-yolo_license_plate_user_config = Box({
+yolo_license_plate_detection_user_config = Box({
 
 })
-yolo_license_plate_model_config = Box({
+yolo_license_plate_detection_model_config = Box({
     "model": "resources/models/yolo/license_plate/license_plate_yolo12n.pt",
     "task": "detect"
 })
-yolo_license_plate_inference_config = Box({
+yolo_license_plate_detection_inference_config = Box({
     "conf": 0.4,
     "iou": 0.7,
     "half": False,

@@ -3,13 +3,9 @@ import os
 from dataclasses import dataclass, field
 
 # Third party package
-import torch
-from PIL import Image
 import supervision as sv
-from ultralytics import YOLO
 from dotenv import load_dotenv
 import torchvision.transforms as T
-from transformers import AutoFeatureExtractor, AutoModel
 
 # Local package
 from base.config import (
@@ -57,18 +53,6 @@ class LicensePlateRecognition:
             config=doctr_ocr_user_config
         )
 
-        # Initialize annotation tools
-        logger.info("Initializing annotation tools.")
-        self._annotator = sv.EllipseAnnotator(
-            color=sv.ColorPalette.from_hex(["#FFFFFF"])
-        )
-        self._label_annotator = sv.LabelAnnotator(
-            color=sv.ColorPalette.from_hex(["#FFFFFF"]),
-            text_color=sv.Color.BLACK,
-            text_scale=0.35,
-            text_padding=2
-        )
-
     def preprocess(self, data):
         logger.info("Preprocessing data for LicensePlateRecognition class.")
         return data
@@ -97,24 +81,22 @@ class LicensePlateRecognition:
         # Check license plate detection is inside vehicle or not
         logger.info("Performing license plate checking inside vehicle detections.")
         insides = is_license_plate_inside_vehicle(
-            vehicle_detections_results=vehicle_detections,
-            license_plate_detection_results=license_plate_detections
+            vehicle_detection=vehicle_detections,
+            license_plate_detection=license_plate_detections
         )
 
         # Filter out license plate detections that are not inside vehicles
         logger.info("Performing filtering the license plate detections.")
         filtered_indices = [i for i, inside in enumerate(insides) if inside]
-        filtered_license_plate_detections = license_plate_detections[filtered_indices]
         filtered_xyxy = license_plate_detections.xyxy[filtered_indices] if len(filtered_indices) > 0 else []
-
-        
-        
+        logger.trace(f"Filtered license plate detections xyxy: {filtered_xyxy}")
 
 
 
+        license_plates = []
 
         if raw_result:
-            return embedding
+            return license_plates, vehicle_detections, license_plate_detections
 
-        embedding = self.postprocess(embedding)
-        return embedding
+        license_plates = self.postprocess(license_plates)
+        return license_plates, vehicle_detections, license_plate_detections

@@ -76,8 +76,8 @@ class DocTROcr:
         width, height = document.shape[:2]  
         result = self._model([document])
         logger.trace(f"Raw result of the DocTROcr: {result}")
+
         if raw_result:
             return result
-
         result = self.postprocess(result, (width, height))
         return result

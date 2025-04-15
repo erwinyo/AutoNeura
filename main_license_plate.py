@@ -1,41 +1,39 @@
+# Built-in package
 import os
 import sys
 import argparse
 sys.path.insert(1, os.path.abspath(os.path.join(os.path.dirname(__file__), './src')))
 
+# Third party package
 import cv2
 from rich import print
 from tqdm import tqdm
 import supervision as sv
 from dotenv import load_dotenv
 
-from base.yolo_vehicle_detection import YOLOVehicleDetection
-from base.yolo_license_plate_detection import YOLOLicensePlateDetection 
-from base.color_detection import ColorDetection
-from base.doctr_ocr import DocTROcr
+# Local package
 from base.config import (
     logger,
-    yolo_vehicle_detection_user_config,
-    doctr_ocr_user_config
+    license_plate_recognition_user_config
 )
+from app.license_plate_recognition import LicensePlateRecognition
+
 load_dotenv()
 
-def main(source_filepath: str):
+def main(source_filepath: str, output_filename: str = "output.mp4"):
     logger.info("Starting the AutoNeura...")
 
-    # Initialize YOLO vehicle detection
-    logger.info("Initializing YOLOVehicleDetection with user configuration.")
-    yolo_vehicle_detection = YOLOVehicleDetection(
-        config=yolo_vehicle_detection_user_config
-    )
-    # Initialize YOLO license plate detection
-    logger.info("Initializing YOLOLicensePlateDetection with user configuration.")
-    yolo_license_plate_detection = YOLOLicensePlateDetection(
-        config=yolo_vehicle_detection_user_config
+    # Initialize LicensePlateRecognition
+    logger.info("Initializing LicensePlateRecognition class.")
+    license_plate_recognition_app = LicensePlateRecognition(
+        **license_plate_recognition_user_config
     )
 
     # Initialize annotation tools
     logger.info("Initializing annotation tools.")
+    box_annotator = sv.BoxAnnotator(
+        color=sv.ColorPalette.from_hex(["#FFFFFF"])
+    )
     ellipse_annotator = sv.EllipseAnnotator(
         color=sv.ColorPalette.from_hex(["#FFFFFF"])
     )
@@ -46,24 +44,21 @@ def main(source_filepath: str):
         text_padding=2
     )
 
-    # Initialize doctr
-    logger.info("Initializing DocTROcr with user configuration.")
-    doctr_ocr = DocTROcr(
-        config=doctr_ocr_user_config
-    )
-
-
      # Load video
     logger.info("Initializing OpenCV VideoCapture.")
     cap = cv2.VideoCapture(source_filepath)
     # Initialize video writer
     logger.info("Initializing OpenCV VideoWriter.")
-    output_path = "output.mp4"
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for .mp4 files
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
+    out = cv2.VideoWriter(
+        output_filename, 
+        fourcc, 
+        fps, 
+        (frame_width, frame_height)
+    )
     
     # Initialize tqdm progress bar
     logger.info("Initializing tqdm progress bar.")
@@ -76,48 +71,30 @@ def main(source_filepath: str):
 
         has_frame, frame = cap.read()
         logger.debug(f"Frame read status: {has_frame}")
-        logger.debug(f"Frame shape: {frame.shape}")
-
+        
         if not has_frame:
             logger.error("No more frames to read, breaking the loop.")
             break
+        logger.debug(f"Frame shape: {frame.shape}")
 
-        # Perform vehicle detection on the frame
         logger.info("Performing vehicle detection.")
-        vehicle_detections = yolo_vehicle_detection.process(frame)
-        logger.debug(f"Vehicle detections atttributes: {dir(vehicle_detections)}")
-        logger.trace(f"Vehicle detections xyxy: {vehicle_detections.xyxy}")
-        logger.trace(f"Vehicle detections tracker_id: {vehicle_detections.tracker_id}")
-        
-        # Perform license plate detection on the frame
-        logger.info("Performing license plate detection.")
-        license_plate_detections = yolo_license_plate_detection.process(frame)
-        logger.debug(f"License plate detections atttributes: {dir(license_plate_detections)}")
-        logger.trace(f"License plate detections xyxy: {license_plate_detections.xyxy}")
-        logger.trace(f"License plate detections tracker_id: {license_plate_detections.tracker_id}")
-        
+        license_plates, vehicle_detections, license_detections = license_plate_recognition_app.process(
+            image=frame,
+            raw_result=False
+        )
 
-
-
-        # Annotate the frame with detected vehicles
         logger.info("Annotating the frame with detected vehicles.")
-        annotated_frame = ellipse_annotator.annotate(
+        annotated_frame = box_annotator.annotate(
             scene=frame.copy(),
-            detections=detections
+            detections=vehicle_detections
         )
-        logger.info("Annotating the frame with labels.")
-        annotated_image = label_annotator.annotate(
-            scene=annotated_image, 
-            detections=detections, 
-            labels=labels
+        annotated_frame = ellipse_annotator.annotate(
+            scene=annotated_frame,
+            detections=license_detections
         )
         
-        logger.info("Drawing the labels on the frame.")
         out.write(annotated_frame)
-
         progress_bar.update(1)
-
-
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="AutoNeura CLI")
@@ -125,7 +102,7 @@ def parse_arguments():
         "--source",
         type=str,
         help="Path to the source (video/image file)",
-        required=False
+        required=True
     )
     return parser.parse_args()
 

@@ -2,12 +2,12 @@ import supervision as sv
 
 
 def is_license_plate_inside_vehicle(
-    vehicle_detection_results: sv.Detections,
-    license_plate_detection_results: sv.Detections,
+    vehicle_detection: sv.Detections,
+    license_plate_detection: sv.Detections,
 ) -> list[bool]:
     # Get the bounding boxes of the vehicle and license plate
-    vehicle_bboxs = vehicle_detection_results.xyxy
-    license_plate_bboxs = license_plate_detection_results.xyxy
+    vehicle_bboxs = vehicle_detection.xyxy
+    license_plate_bboxs = license_plate_detection.xyxy
 
     inside = [False] * len(license_plate_bboxs) 
     for vehicle_bbox in vehicle_bboxs:

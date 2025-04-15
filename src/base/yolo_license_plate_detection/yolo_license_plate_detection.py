@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 # Local package
 from base.config import (
     logger,
-    yolo_license_plate_model_config,
-    yolo_license_plate_inference_config
+    yolo_license_plate_detection_model_config,
+    yolo_license_plate_detection_inference_config
 )
 
 load_dotenv()
@@ -24,7 +24,7 @@ class YOLOLicensePlateDetection:
     _model: YOLO = field(init=False, repr=False)
     def __post_init__(self) -> None:
         logger.info("Initializing YOLOLicensePlateDetection class.")
-        self._model = YOLO(**yolo_license_plate_model_config)
+        self._model = YOLO(**yolo_license_plate_detection_model_config)
 
     def preprocess(self, data):
         logger.info("Preprocessing data for YOLOLicensePlateDetection class.")
@@ -44,12 +44,12 @@ class YOLOLicensePlateDetection:
             
             # Save result to file
             logger.info("Saving result to file.")
-            self._model(data, save=True, **yolo_license_plate_inference_config)
+            self._model(data, save=True, **yolo_license_plate_detection_inference_config)
             return
 
         else:
             with torch.no_grad():
-                results = self._model.predict(data, **yolo_license_plate_inference_config)[0]
+                results = self._model.predict(data, **yolo_license_plate_detection_inference_config)[0]
 
             # Compile result to supervision
             detections = sv.Detections.from_ultralytics(results)

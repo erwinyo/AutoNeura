@@ -127,6 +127,31 @@ tests/results/*
 !tests/video/.gitkeep
 !tests/results/.gitkeep
 
+# images
+resources/images/*
+resources/images/*.jpg
+resources/images/*.jpeg
+resources/images/*.png
+resources/images/*.gif
+resources/images/*.bmp
+resources/images/*.tiff
+resources/images/*.tif
+resources/images/*.webp
+resources/images/*.ico
+resources/images/*.svg
+
+
+# videos
+resources/videos/*
+resources/videos/*.mp4
+resources/videos/*.avi
+resources/videos/*.mov
+resources/videos/*.mkv
+resources/videos/*.wmv
+resources/videos/*.flv
+resources/videos/*.webm
+resources/videos/*.m4v
+
 # models
 resources/models/*
 resources/models/*.pt
