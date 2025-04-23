@@ -6,7 +6,7 @@ from box import Box
 from loguru import logger
 
 # Logger configuration
-LEVEL = "TRACE"
+LEVEL = "SUCCESS"
 PRINT_TO_CONSOLE = True
 
 # ------------------------------- [LOGGER] -------------------------------
@@ -29,7 +29,7 @@ if PRINT_TO_CONSOLE:
 
 # ------------------------------- [APP] -------------------------------
 license_plate_recognition_user_config = Box({  
-    
+
 })
 text_recognition_user_config = Box({  
     
@@ -51,11 +51,11 @@ yolo_vehicle_detection_inference_config = Box({
     "conf": 0.4,
     "iou": 0.7,
     "half": False,
-    "device": "cuda:0",
+    "device": "0",
     "agnostic_nms": False,
     "classes": [2, 3, 5, 7],
     "stream": False,
-    "verbose": False
+    "verbose": True
 })
 
 # Yolo License Plate configuration
@@ -70,11 +70,11 @@ yolo_license_plate_detection_inference_config = Box({
     "conf": 0.4,
     "iou": 0.7,
     "half": False,
-    "device": "cuda:0",
+    "device": "0",
     "agnostic_nms": False,
     "classes": [0],
     "stream": False,
-    "verbose": False
+    "verbose": True
 })
 
 
@@ -91,10 +91,7 @@ color_detection_model_config = Box({
 vehicle_attribute_user_config = Box({
 })
 vehicle_attribute_model_config = Box({
-    "model_name": "vehicle_attribute",
-    "use_gpu": False,
-    "batch_size": 1,
-    "topk": 5,
+    "model_name": "vehicle_attribute"
 })
 vehicle_attribute_inference_config = Box({
     "predict_type": "cls"
@@ -104,10 +101,12 @@ vehicle_attribute_inference_config = Box({
 
 # Doctr OCR configuration
 doctr_ocr_user_config = Box({
-    
+    "use_gpu": False,
+    "use_half_precision": True,
 })
 doctr_ocr_model_config = Box({
     "det_arch": "db_resnet50",
     "reco_arch": "parseq",
-    "pretrained": True
+    "pretrained": True,
+    "assume_straight_pages": False,
 })

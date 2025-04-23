@@ -31,49 +31,35 @@ class ColorDetection:
     _iscc_rgb: np.ndarray = field(init=False, repr=False)
     def __post_init__(self) -> None:
         logger.info("Initializing ColorDetection class.")
+
         # Setup the color system
         self._color_system = pd.read_excel(
             self.config.iscc_nbs_colour_system_path
         ).dropna(subset=['r', 'g', 'b']).reset_index(drop=True)
         logger.trace(f"Raw color system data from file: {self._color_system.head()}")
 
+        # Seperate the color and category
         self._iscc_color = self._color_system[["color"]].values
         self._iscc_category = self._color_system[["category"]].values
 
+        # Convert RGB to LAB color space
         self._iscc_rgb = self._color_system[['r', 'g', 'b']].to_numpy() / 255
         self._iscc_lab = color.rgb2lab(self._iscc_rgb)
 
-        logger.debug(f"Shape of _iscc_color: {self._iscc_color.shape}")
-        logger.debug(f"Shape of _iscc_category: {self._iscc_category.shape}")
-        logger.debug(f"Shape of _iscc_rgb: {self._iscc_rgb.shape}")
-        logger.debug(f"Shape of _iscc_lab: {self._iscc_lab.shape}")
-
     def preprocess(self, data):
-        logger.info("Preprocessing data for ColorDetection class.")
         return data
 
     def postprocess(self, dominant_hue_color, dominant_hue_category):
-        logger.info("Postprocessing data for ColorDetection class.")
         return dominant_hue_color, dominant_hue_category
 
     def process(self, rgb, metric: str = "euclidean", raw_result: bool = False):
-        logger.info("Processing data ColorDetection class.")
-
-        logger.info("Checking rgb variable is numpt array or not.")
         logger.debug(f"Type of rgb variable: {type(rgb)}")
         if not isinstance(rgb, np.ndarray):
-            logger.info("Converting rgb variable to numpy array.")
             rgb = np.array(rgb)
             logger.debug(f"Type of rgb variable: {type(rgb)}")
         
         logger.debug(f"Shape of rgb variable: {rgb.shape}")
-
-        logger.debug(f"rgb variable before normalize: {rgb[:2][0][0]}")
-        rgb = rgb / 255
-        logger.debug(f"rgb variable after normalize: {rgb[:2][0][0]}")
-        
-        lab = color.rgb2lab(rgb)
-        logger.debug(f"lab variable: {lab[:2][0][0]}")
+        lab = color.rgb2lab(rgb / 255)
         logger.debug(f"Shape of lab variable: {lab.shape}")
 
         # Find the closest color in LUT1
@@ -111,10 +97,8 @@ class ColorDetection:
         logger.debug(f"Closest color index: {closest_color_index}")
 
         # Get the dominant hue from LUT1
-        logger.info("Getting the dominant hue from LUT1.")
         dominant_hue_color = str(self._iscc_color[closest_color_index][0])
         logger.debug(f"Dominant hue color: {dominant_hue_color}")
-        logger.info("Getting the dominant hue category from LUT1.")
         dominant_hue_category = str(self._iscc_category[closest_color_index][0])
         logger.debug(f"Dominant hue category: {dominant_hue_category}")
 

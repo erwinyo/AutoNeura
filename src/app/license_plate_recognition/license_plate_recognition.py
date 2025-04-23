@@ -1,5 +1,6 @@
 # Built-in package
 import os
+import time
 from dataclasses import dataclass, field
 
 # Third party package
@@ -36,64 +37,73 @@ class LicensePlateRecognition:
         logger.info("Initializing LicensePlateRecognition class.")
 
         # Initialize YOLO vehicle detection
-        logger.info("Initializing YOLOVehicleDetection with user configuration.")
         self._vehicle_detection_model = YOLOVehicleDetection(   
             config=yolo_vehicle_detection_user_config
         )
 
         # Initialize YOLO license plate detection
-        logger.info("Initializing YOLOLicensePlateDetection with user configuration.")
         self._license_plate_detection_model = YOLOLicensePlateDetection(
             config=yolo_license_plate_detection_user_config
         )
         
         # Initialize doctr
-        logger.info("Initializing DocTROcr with user configuration.")
         self._ocr_model = DocTROcr(
             config=doctr_ocr_user_config
         )
 
     def preprocess(self, data):
-        logger.info("Preprocessing data for LicensePlateRecognition class.")
         return data
 
     def postprocess(self, data):
-        logger.info("Postprocessing data for LicensePlateRecognition class.")
         return data
 
     def process(self, image, raw_result: bool = False):
-        logger.info("Processing data LicensePlateRecognition class.")
-
         # Perform vehicle detection on the frame
-        logger.info("Performing vehicle detection.")
         vehicle_detections = self._vehicle_detection_model.process(image)
-        logger.debug(f"Vehicle detections atttributes: {dir(vehicle_detections)}")
-        logger.trace(f"Vehicle detections xyxy: {vehicle_detections.xyxy}")
-        logger.trace(f"Vehicle detections tracker_id: {vehicle_detections.tracker_id}")
+        # logger.debug(f"Vehicle detections atttributes: {dir(vehicle_detections)}")
+        # logger.trace(f"Vehicle detections xyxy: {vehicle_detections.xyxy}")
+        # logger.trace(f"Vehicle detections tracker_id: {vehicle_detections.tracker_id}")
 
         # Perform license plate detection on the frame
-        logger.info("Performing license plate detection.")
         license_plate_detections = self._license_plate_detection_model.process(image)
-        logger.debug(f"License plate detections atttributes: {dir(license_plate_detections)}")
-        logger.trace(f"License plate detections xyxy: {license_plate_detections.xyxy}")
-        logger.trace(f"License plate detections tracker_id: {license_plate_detections.tracker_id}")
+        # logger.debug(f"License plate detections atttributes: {dir(license_plate_detections)}")
+        # logger.trace(f"License plate detections xyxy: {license_plate_detections.xyxy}")
+        # logger.trace(f"License plate detections tracker_id: {license_plate_detections.tracker_id}")
 
         # Check license plate detection is inside vehicle or not
-        logger.info("Performing license plate checking inside vehicle detections.")
+        start = time.time()
         insides = is_license_plate_inside_vehicle(
             vehicle_detection=vehicle_detections,
             license_plate_detection=license_plate_detections
         )
+        end = time.time()
+        print(f"Time taken to check license plate inside vehicle: {end - start}")
 
         # Filter out license plate detections that are not inside vehicles
-        logger.info("Performing filtering the license plate detections.")
+        start = time.time()
         filtered_indices = [i for i, inside in enumerate(insides) if inside]
         filtered_xyxy = license_plate_detections.xyxy[filtered_indices] if len(filtered_indices) > 0 else []
-        logger.trace(f"Filtered license plate detections xyxy: {filtered_xyxy}")
+        # logger.trace(f"Filtered license plate detections xyxy: {filtered_xyxy}")
+        end = time.time()
+        print(f"Time taken to filter license plate detections: {end - start}")
 
-
-
+        # Perform OCR on the filtered license plate detections
+        start = time.time()
         license_plates = []
+        for xyxy in filtered_xyxy:
+            # Extract the license plate region from the image
+            x1, y1, x2, y2 = map(int, xyxy)
+            license_plate_region = image[y1:y2, x1:x2]
+
+            # Perform OCR on the license plate region
+            ocr_result = self._ocr_model.process(license_plate_region)
+            logger.debug(f"OCR result: {ocr_result}")
+
+            # Append the OCR result to the list of license plates
+            license_plates.append(ocr_result)
+        end = time.time()
+        print(f"Time taken to perform OCR: {end - start}")
+
 
         if raw_result:
             return license_plates, vehicle_detections, license_plate_detections

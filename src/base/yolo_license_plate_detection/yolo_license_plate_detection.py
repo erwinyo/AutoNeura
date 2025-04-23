@@ -27,23 +27,18 @@ class YOLOLicensePlateDetection:
         self._model = YOLO(**yolo_license_plate_detection_model_config)
 
     def preprocess(self, data):
-        logger.info("Preprocessing data for YOLOLicensePlateDetection class.")
         return data
     
     def postprocess(self, data):
-        logger.info("Postprocessing data for YOLOLicensePlateDetection class.")
         return data
 
     def process(self, data, raw_result: bool = False, save_result: bool = False):
-        logger.info("Processing data YOLOLicensePlateDetection class.")
-        
         if save_result:
             if not os.path.exists(data):
                 logger.error(f"The specified data path does not exist: {data}")
                 raise FileNotFoundError(f"The specified data path does not exist: {data}")
             
             # Save result to file
-            logger.info("Saving result to file.")
             self._model(data, save=True, **yolo_license_plate_detection_inference_config)
             return
 
