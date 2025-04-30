@@ -44,12 +44,13 @@ def main():
         color = np.array(color)
         print(f"Color: {color}")
         
-        dominant_hue_color, dominant_hue_category = color_detection.process(
+        detection = color_detection.process(
             rgb=color,
             metric="euclidean"
         )
-        print(f"Dominant hue color: {dominant_hue_color}")
-        print(f"Dominant hue category: {dominant_hue_category}")
+        print(f"Detection: {detection}")
+        # print(f"Dominant hue color: {dominant_hue_color}")
+        # print(f"Dominant hue category: {dominant_hue_category}")
 
 if __name__ == "__main__":
     main()

@@ -62,21 +62,37 @@ class DocTROcr:
                         words_bowl.append(word.value)
                         confidences_bowl.append(word.confidence)
                         objectness_score_bowl.append(word.objectness_score)
-                        xyxys_bowl.append(sum([[float(value) for value in row] for row in word.geometry], []))
+                        xyxys_bowl.append(sum([
+                            [float(value) for value in row] 
+                            for row in word.geometry
+                        ], []))
 
         # Convert percentage coordinate to pixel coordinate
         width, height = width_height
         for i in range(len(xyxys_bowl)):
-            xyxys_bowl[i] = [xyxys_bowl[i][0] * width, xyxys_bowl[i][1] * height, xyxys_bowl[i][2] * width, xyxys_bowl[i][3] * height]
+            # DocTr returns coordinates as percentages in format [x1, y1, x2, y2]
+            # We need to convert them to absolute pixel coordinates
+            x1 = xyxys_bowl[i][0] * width
+            y1 = xyxys_bowl[i][2] * height
+            x2 = (xyxys_bowl[i][0] + xyxys_bowl[i][1]) * height
+            y2 = (xyxys_bowl[i][2] + xyxys_bowl[i][3]) * height
+            xyxys_bowl[i] = [x1, y1, x2, y2]
         
-        # Return the result as a dictionary
-        return_value = Box({
-            "words": words_bowl,
-            "confidences": confidences_bowl,
-            "objectness_score": objectness_score_bowl, 
-            "xyxys": xyxys_bowl
-        })
-        return return_value
+        # Convert to numpy array        
+        xyxys_bowl = np.array(xyxys_bowl)
+        confidences_bowl = np.array(confidences_bowl)
+
+        # Create detections based on Supervision
+        detections = sv.Detections(
+            xyxy=xyxys_bowl,
+            confidence=confidences_bowl,
+            class_id=np.zeros(len(xyxys_bowl), dtype=int),   
+            data={
+                'text': words_bowl
+            }
+        )
+        
+        return detections
 
     def process(self, document, raw_result: bool = False):
 

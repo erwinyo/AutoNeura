@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 from PIL import Image
+import supervision as sv
 from skimage import color
 from dotenv import load_dotenv
 
@@ -50,7 +51,15 @@ class ColorDetection:
         return data
 
     def postprocess(self, dominant_hue_color, dominant_hue_category):
-        return dominant_hue_color, dominant_hue_category
+        # Create detections based on Supervision
+        detections = sv.Detections( 
+            xyxy=np.array([[0, 0, 1, 1]]),  # Dummy bounding box
+            data={
+                'dominant_color': [dominant_hue_color],
+                'dominant_category': [dominant_hue_category]
+            }
+        )
+        return detections
 
     def process(self, rgb, metric: str = "euclidean", raw_result: bool = False):
         logger.debug(f"Type of rgb variable: {type(rgb)}")
@@ -105,9 +114,9 @@ class ColorDetection:
         if raw_result:
              return dominant_hue_color, dominant_hue_category
 
-        dominant_hue_color, dominant_hue_category = self.postprocess(
+        detections = self.postprocess(
             dominant_hue_color, 
             dominant_hue_category
         )
-        return dominant_hue_color, dominant_hue_category
+        return detections
 

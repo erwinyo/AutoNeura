@@ -6,7 +6,7 @@ from box import Box
 from loguru import logger
 
 # Logger configuration
-LEVEL = "SUCCESS"
+LEVEL = "TRACE"
 PRINT_TO_CONSOLE = True
 
 # ------------------------------- [LOGGER] -------------------------------
@@ -31,10 +31,6 @@ if PRINT_TO_CONSOLE:
 license_plate_recognition_user_config = Box({  
 
 })
-text_recognition_user_config = Box({  
-    
-})
-
 
 
 
@@ -87,21 +83,9 @@ color_detection_model_config = Box({
 })
 
 
-# Vehicle Attribute configuration
-vehicle_attribute_user_config = Box({
-})
-vehicle_attribute_model_config = Box({
-    "model_name": "vehicle_attribute"
-})
-vehicle_attribute_inference_config = Box({
-    "predict_type": "cls"
-})
-
-
-
 # Doctr OCR configuration
 doctr_ocr_user_config = Box({
-    "use_gpu": False,
+    "use_gpu": True,
     "use_half_precision": True,
 })
 doctr_ocr_model_config = Box({
